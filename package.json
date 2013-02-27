@@ -1,0 +1,26 @@
+{
+  "name": "dev-porta",
+  "version": "0.0.1",
+  "description": "dev-porta =========",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "express": "~3.1.0",
+    "iced-coffee-script": "~1.4.0c",
+    "jade": "~0.28.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "./test.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/layerssss/dev-porta.git"
+  },
+  "author": "Michael Yin",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "9432c91832ce41fe4ece27863f6eedda86860c7d"
+}

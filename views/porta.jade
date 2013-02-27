@@ -1,0 +1,10 @@
+!!!
+html
+  head
+  body
+    ul
+      for app in data
+        for port in app.ports
+          li
+            a(href='http://#{host}:#{port.port}/') http://#{host}:#{port.port}/
+            | : #{app.name}.#{port.name}
