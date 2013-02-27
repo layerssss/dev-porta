@@ -1,10 +1,16 @@
 {
   "name": "dev-porta",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "dev-porta =========",
   "main": "index.js",
   "directories": {
     "test": "test"
+  },
+  "os": [
+    "!win32"
+  ],
+  "bin": {
+    "dev-porta": "./bin/dev-porta"
   },
   "dependencies": {
     "express": "~3.1.0",
