@@ -4,7 +4,7 @@ html
   body
     ul
       for app in data
-        for port in app.ports
+        for port in app.data.ports
           li
             a(href='http://#{host}:#{port.port}/') http://#{host}:#{port.port}/
             | : #{app.name}.#{port.name}

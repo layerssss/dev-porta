@@ -14,6 +14,9 @@ allocatePort = (cb)->
   port = s.address().port
   s.close()
   cb null, port
+processExists = (pid, cb)->
+  await exec "ps #{pid}", defer e, out, err
+  cb null, (out.match /node/)?
 
 module.exports = ()->
   throw new Error 'You can do nothing without a $HOME' unless process.env.HOME
@@ -29,13 +32,19 @@ module.exports = ()->
     app = express()
     app.set 'views', path.join __dirname, 'views'
     app.set 'view engine', 'jade'
-    app.get '/', (req, res)->
+    app.get '/', (req, res, next)->
       data = []
       for file in fs.readdirSync PROCESSPATH
         continue unless file.match /\.json/
-        data.push
+        await fs.readFile (path.join PROCESSPATH, file), 'utf8', defer e, content
+        return next e if e
+        d=
           name: file.substring 0, file.length - '.json'.length
-          ports: JSON.parse fs.readFileSync (path.join PROCESSPATH, file), 'utf8'
+          data: JSON.parse content
+        await processExists d.data.pid, defer e, exists
+        return next e if e
+        continue if !exists
+        data.push d
       res.render 'porta', data: data, host: req.host
 
     server = http.createServer app
@@ -51,7 +60,7 @@ module.exports = ()->
         name: portName
         env: portEnv
         port: port
-    fs.writeFileSync (path.join PROCESSPATH, processName + '.json'), (JSON.stringify processPorts), 'utf8'
+    
 
     process.on 'exit', ->
       fs.unlinkSync (path.join PROCESSPATH, processName + '.json')
@@ -69,6 +78,12 @@ module.exports = ()->
     p.stdout.pipe process.stdout, end: false
     p.stderr.pipe process.stderr, end: false
     process.stdin.pipe p.stdin, end: false
+
+    data = 
+      ports: processPorts
+      pid: p.pid
+    fs.writeFileSync (path.join PROCESSPATH, processName + '.json'), (JSON.stringify data), 'utf8'
+
     await p.on 'exit', defer code
     console.log "#{cfg.command} exited with #{code}"
 
