@@ -69,6 +69,9 @@ module.exports = ()->
       process.exit -1
     process.on 'SIGTERM', ->
       process.exit -1
+    process.on 'SIGKILL', ->
+      process.exit -1
+      
 
     env = {}
     env[k] = v for k, v of process.env
